@@ -1,0 +1,30 @@
+                           ┌───────────────────────────────┐
+                           │         User Interface        │
+                           │      (Removed for now)        │
+                           └────────────┬──────────────────┘
+                                        │
+                                        ▼
+                        ┌─────────────────────────────────────┐
+                        │         Main Training Loop          │◄────────────────────────┐
+                        │         (trainer.py)                │                         │
+                        └────┬──────────────┬──────────────┬──┘                         │
+                             │              │              │                            │
+        ┌────────────────────▼───┐ ┌────────▼────────┐ ┌────▼──────────────────┐        │
+        │ Environment (Gym)      │ │ Agent (DQN)     │ │ Logging & Plotting    │        │
+        │ e.g., CartPole-v1      │ │ (agents/dqn.py) │ │ (utils/log_utils.py & │        │
+        │ Gymnasium API          │ │ Torch + Replay  │ │  utils/plot_metrics.py│        │
+        └────────────┬───────────┘ └────────┬─────────┘ └────────┬──────────────┘        │
+                     │                      │                    │                       │
+                     ▼                      ▼                    ▼                       │
+        ┌────────────────────┐   ┌──────────────────────┐   ┌─────────────────────────┐   │
+        │ Interaction Loop    │   │ Q-value Predictions │   │ metrics.csv (Reward,    │   │
+        │ action = ε-greedy   │   │ + Training Updates  │   │ Loss, Epsilon per Ep)   │   │
+        │ log, store replay   │   │ loss.backward()     │   │ → Plotted via Matplotlib│   │
+        └──────────┬──────────┘   └──────────┬───────────┘   └────────────┬───────────┘   │
+                   │                         │                            │               │
+                   ▼                         ▼                            ▼               │
+           ┌────────────────────┐     ┌─────────────────────┐      ┌───────────────┐      │
+           │ Transfer Learning  │◄────┤ Target Net Sync     │◄────┤ Training Check │◄─────┘
+           │ (Pretrained Weights│     │ target.load(policy) │     │ Performance    │
+           │ or Shared Params)  │     └─────────────────────┘     │ Thresholding   │
+           └────────────────────┘                                 └───────────────┘
